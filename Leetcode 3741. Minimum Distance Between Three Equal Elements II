@@ -1,0 +1,25 @@
+class Solution {
+    public int minimumDistance(int[] nums) {
+        HashMap<Integer,ArrayList<Integer>> fre = new HashMap<>();
+       
+        for (int i = 0; i < nums.length; i++) {
+            if(!fre.containsKey(nums[i])){
+                fre.put(nums[i],new ArrayList<>());
+            }
+            fre.get(nums[i]).add(i);
+        }
+        int min = Integer.MAX_VALUE;
+        for (int key : fre.keySet()){
+            if (fre.get(key).size()>= 3) {
+              ArrayList<Integer> l=fre.get(key);
+              //sliding window 
+              for(int i=0; i<=l.size()-3; i++){
+                min=Math.min(min,(Math.abs(l.get(i)-l.get(1+i))+
+                                Math.abs(l.get(1+i)-l.get(2+i))+
+                                Math.abs(l.get(i)-l.get(2+i))));
+               }
+            }
+        }
+        return min == Integer.MAX_VALUE ? -1 : min;
+    }
+}
