@@ -1,0 +1,60 @@
+class Solution {
+    class Pair {
+        int x;
+        int y;
+        Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public int getDistance(int x1, int y1, int x2, int y2) {
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+    }
+
+    public Pair getCordinates(char ch) {
+        // 'A' is 65. If the input is 'A', ascii will be 0.
+        int ascii = (int) ch - 'A'; 
+        return new Pair(ascii / 6, ascii % 6);
+    }
+
+    public int solve(String s, int idx, int x1, int y1, int x2, int y2, Integer[][][][][] dp) {
+        if (idx >= s.length()) return 0;
+
+        // Use +1 offset for all coordinate indices to handle the -1 state
+        if (dp[idx][x1 + 1][y1 + 1][x2 + 1][y2 + 1] != null)
+            return dp[idx][x1 + 1][y1 + 1][x2 + 1][y2 + 1];
+
+        Pair cordinate = getCordinates(s.charAt(idx));
+        int x = cordinate.x;
+        int y = cordinate.y;
+
+        int result;
+
+        // Both fingers unused
+        if (x1 == -1 && y1 == -1 && x2 == -1 && y2 == -1) {
+            result = solve(s, idx + 1, x, y, x2, y2, dp);
+        }
+        // Finger 2 unused
+        else if (x2 == -1 && y2 == -1) {
+        
+            int moveFinger2 = solve(s, idx + 1, x1, y1, x, y, dp);
+            
+            int moveFinger1 = getDistance(x, y, x1, y1) + solve(s, idx + 1, x, y, x2, y2, dp);
+            result = Math.min(moveFinger1, moveFinger2);
+        }
+        // Both used already
+        else {
+            int moveFinger1 = getDistance(x, y, x1, y1) + solve(s, idx + 1, x, y, x2, y2, dp);
+            int moveFinger2 = getDistance(x, y, x2, y2) + solve(s, idx + 1, x1, y1, x, y, dp);
+            result = Math.min(moveFinger1, moveFinger2);
+        }
+
+        return dp[idx][x1 + 1][y1 + 1][x2 + 1][y2 + 1] = result;
+    }
+
+    public int minimumDistance(String word) {
+        Integer[][][][][] dp = new Integer[word.length()][6][7][6][7];
+        return solve(word, 0, -1, -1, -1, -1, dp);
+    }
+}
