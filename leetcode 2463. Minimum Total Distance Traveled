@@ -1,0 +1,26 @@
+class Solution {
+    public long ans(int rob, int pos, List<Integer> robot, List<Integer> posi,Long[][] dp){
+        if(rob>= robot.size()) return 0;
+        if(pos>=posi.size()) return (long)1e12;
+        if(dp[rob][pos]!=null) return dp[rob][pos];
+        long take=Math.abs(robot.get(rob)-posi.get(pos))+ans(rob+1,pos+1,robot,posi,dp);
+        long skip=ans(rob,pos+1,robot,posi,dp);
+        return dp[rob][pos]=Math.min(take,skip);
+    }
+    public long minimumTotalDistance(List<Integer> robot, int[][] factory) {
+        Collections.sort(robot);
+       ArrayList<Integer> pos=new ArrayList<>();
+       for(int i=0; i<factory.length; i++){
+        int len=factory[i][1];
+        int loc=factory[i][0];
+        for(int j=0; j<len; j++){
+           pos.add(loc);
+        }
+       }
+       Collections.sort(pos);
+       int m=robot.size();
+       int n=pos.size();
+       Long[][] dp=new Long[m+1][n+1];
+        return ans(0,0,robot,pos,dp);
+    }
+}
