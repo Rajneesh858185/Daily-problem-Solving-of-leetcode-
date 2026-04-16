@@ -1,0 +1,31 @@
+class Solution {
+    public List<Integer> solveQueries(int[] nums, int[] queries) {
+        int n=nums.length;
+        int m=queries.length;
+        ArrayList<Integer> al=new ArrayList<>(m);
+        HashMap<Integer,ArrayList<Integer>> mp=new HashMap<>();
+        for(int i=0;i<n;i++){
+            mp.putIfAbsent(nums[i],new ArrayList<>());
+            mp.get(nums[i]).add(i);
+        }
+        for(int j=0;j<m;j++){
+            int index=queries[j];
+            int num=nums[index];
+            ArrayList<Integer> l=mp.get(num);
+            if(l.size()==1){
+                al.add(-1);
+                continue;
+            }
+           int size=l.size();
+           int pos=Collections.binarySearch(l,index);
+           int leftIdx=l.get((pos-1+size)%size);
+           int rightIdx=l.get((pos+1)%size);
+           int leftM=Math.abs(index-leftIdx);
+           int rightM=Math.abs(index-rightIdx);
+           leftM= Math.min(leftM, n - leftM);
+           rightM=Math.min(rightM,n-rightM);
+            al.add(Math.min(leftM, rightM));
+        }
+        return al;
+    }
+}
