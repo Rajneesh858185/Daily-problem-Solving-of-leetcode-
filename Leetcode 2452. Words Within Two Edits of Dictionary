@@ -1,0 +1,30 @@
+class Solution {
+    static ArrayList<String> ans;
+    public int  match(String s, String t){
+        int count=0;
+        for(int i=0; i<s.length(); i++){
+            if(s.charAt(i)!=t.charAt(i)){
+                count++;
+            }
+        }
+        return count;
+    }
+    public void check(String s, String[] dictionary){
+        for(int i=0; i<dictionary.length; i++){
+            String t=dictionary[i];
+            if(match(s,t)<=2){
+                ans.add(s);
+                break;
+            }
+        }
+    }
+    public List<String> twoEditWords(String[] queries, String[] dictionary) {
+        ans=new ArrayList<>();
+        int n=queries.length;
+        for(int i=0; i<n; i++){
+            String s=queries[i];
+             check(s,dictionary);
+        }
+        return ans;
+    }
+}
